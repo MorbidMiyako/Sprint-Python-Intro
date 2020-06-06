@@ -34,11 +34,7 @@ def cityreader(cities=[]):
     # For each city record, create a new City instance and add it to the
     # `cities` list
 
-    # cities_file = open("cities.csv", "r")
-    # all_lines = cities_file.readlines()
-    # all_lines.pop(0)
-    # for line in lines:
-    #     (City(*line.split(",")))for line in lines:
+    # version with csv module
     with open('cities.csv') as csvfile:
         all_lines = csv.reader(csvfile, delimiter=',')
         for current_line in all_lines:
@@ -51,15 +47,25 @@ def cityreader(cities=[]):
                 cities.append(
                     City(current_line[0], current_line[3], current_line[4]))
 
-        # all_lines.pop(0)
+    return cities
+
+    # version without csv module
+    # cities_file = open("cities.csv", "r")
+
+    # return [City(*next_line.split(",")) for next_line in cities_file.readlines()]
+
+    # stuff used to fix the fact that it is only allowed to take 3 arguments
+    # all_lines = cities_file.readlines()
+    # all_lines.pop(0)
+    # for line in lines:
+    #     (City(*line.split(",")))for line in lines:
+
+    # all_lines.pop(0)
     # for next_line in all_lines:
-    #     a, b, c, d, e, f, g, h, i = next_line.split(",")
+    # a, b, c, d, e, f, g, h, i = next_line.split(",")
     #     # new_city = City(a, b, c, d, e, f, g, h, i)
     #     # print(new_city)
-        # cities.append(City(a, d, e))
-
-        # return [City(*next_line.split(",")) for next_line in all_lines]
-    return cities
+    # cities.append(City(a, d, e))
 
 
 cities = cityreader(cities)
@@ -109,6 +115,15 @@ def cityreader_stretch(lat1, lon1, lat2, lon2, cities=[]):
 
     within_lon_too = []
 
+    within_lat += [city for city in cities if lat1 < city.lat < lat2]
+    within_lat += [city for city in cities if lat1 > city.lat > lat2]
+    within_lon_too += [
+        city for city in within_lat if lon1 < city.lon < lon2]
+    within_lon_too += [
+        city for city in within_lat if lon1 > city.lon > lon2]
+
+    return within_lon_too
+    """
     if lat1 < lat2:
 
         print("lat1 smaller than lat2")
@@ -156,9 +171,9 @@ def cityreader_stretch(lat1, lon1, lat2, lon2, cities=[]):
         # the specified coordinates.
 
     return within_lon_too
+    """
 
 
 # Enter lat1,lon1: 45,-100
 # Enter lat2,lon2: 32,-120
-
 print(cityreader_stretch(45, -100, 32, -120, cities))
